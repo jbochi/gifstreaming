@@ -5,6 +5,10 @@
 # GIF for Dummies: http://www.matthewflickinger.com/lab/whatsinagif/bits_and_bytes.asp
 # Animated GIF extension: http://odur.let.rug.nl/~kleiweg/gif/netscape.html
 
+import os
+INPUT_PATH = "input"
+OUTPUT_PATH = "parts"
+
 def hex_to_binary(hex_string):
     return ''.join([b.decode('hex') for b in hex_string.split(" ")])
 
@@ -22,6 +26,7 @@ def full_gif_to_animated_gif_header(raw_gif):
 
     # Animated GIF extension
     ANIMATED_GIF_EXTENSION = hex_to_binary("21 ff 0b") + "NETSCAPE2.0" + hex_to_binary("03 01 01 00 00")
+    assert len(ANIMATED_GIF_EXTENSION) == 19
     return logical_description + ANIMATED_GIF_EXTENSION
 
 def full_gif_to_frame(raw_gif):
@@ -60,16 +65,23 @@ def full_gif_to_frame(raw_gif):
 
     return frame
 
+def create_header_file(input_path, output_path):
+    with open(input_path, "rb") as f:
+        raw_gif = f.read()
+    with open(output_path, "wb") as f:
+        f.write(full_gif_to_animated_gif_header(raw_gif))
+
+def create_frame_file(input_path, output_path):
+    print "converting %s to %s" % (input_path, output_path)
+    with open(input_path, "rb") as f:
+        raw_gif = f.read()
+    with open(output_path, "wb") as f:
+        f.write(full_gif_to_frame(raw_gif))
+
 
 if __name__ == "__main__":
-  with open("input/in1.gif", "rb") as f:
-      raw_gif = f.read()
-  with open("parts/out0.part", "wb") as f:
-      f.write(full_gif_to_animated_gif_header(raw_gif))
-
-  for i in xrange(1, 500):
-      print i
-      with open("input/in%d.gif" % i, "rb") as f:
-          raw_gif = f.read()
-      with open("parts/out%d.part" % i, "wb") as f:
-          f.write(full_gif_to_frame(raw_gif))
+    create_header_file(os.path.join(INPUT_PATH, "in1.gif"),
+                       os.path.join(OUTPUT_PATH, "out0.part"))
+    for i in xrange(1, 500):
+        create_frame_file(os.path.join(INPUT_PATH, "in%d.gif" % i),
+                          os.path.join(INPUT_PATH, "out%d.part" % i))

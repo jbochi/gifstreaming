@@ -16,8 +16,8 @@ If you have a RTMP stream handy:
 
 After that, create the gif frames that will be served executing the `trans.py` script
 
-	$ mkdir parts
-    $ python trans.py
+    $ mkdir parts
+    $ python transform.py
 
 The server is a node.js script:
 
