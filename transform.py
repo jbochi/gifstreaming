@@ -6,6 +6,8 @@
 # Animated GIF extension: http://odur.let.rug.nl/~kleiweg/gif/netscape.html
 
 import os
+import time
+
 INPUT_PATH = "input"
 OUTPUT_PATH = "parts"
 
@@ -78,10 +80,18 @@ def create_frame_file(input_path, output_path):
     with open(output_path, "wb") as f:
         f.write(full_gif_to_frame(raw_gif))
 
-
-if __name__ == "__main__":
+def transform():
     create_header_file(os.path.join(INPUT_PATH, "in1.gif"),
                        os.path.join(OUTPUT_PATH, "out0.part"))
-    for i in xrange(1, 500):
-        create_frame_file(os.path.join(INPUT_PATH, "in%d.gif" % i),
-                          os.path.join(INPUT_PATH, "out%d.part" % i))
+    for filename in os.listdir(INPUT_PATH):
+        input_path = os.path.join(INPUT_PATH, filename)
+        output_path = os.path.join(OUTPUT_PATH, filename.replace("in", "out").replace(".gif", ".part"))
+        if not os.path.exists(output_path):
+            create_frame_file(input_path, output_path)
+
+
+if __name__ == "__main__":
+    while True:
+        print 'Finding new files...'
+        transform()
+        time.sleep(1)
