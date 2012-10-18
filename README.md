@@ -1,6 +1,8 @@
 Video streaming using Animated GIFs
 -----------------------------------
 
+![Sample](https://raw.github.com/jbochi/gifstreaming/master/doc/sample.gif)
+
 You need to create one gif image per frame at the input directory
 
 If you have ffmpeg and a input video, you can do it like this:
