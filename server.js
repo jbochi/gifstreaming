@@ -3,7 +3,7 @@ var fs = require('fs'),
 
 
 function servePart(res, i, callback) {
-  var filename = 'split/out' + i + '.part';
+  var filename = 'parts/out' + i + '.part';
   fs.readFile(filename, function (err, data) {
     if (err) return callback(err);
     console.log('serving file ' + filename);

@@ -62,14 +62,14 @@ def full_gif_to_frame(raw_gif):
 
 
 if __name__ == "__main__":
-  with open("full/frame1.gif", "rb") as f:
+  with open("input/in1.gif", "rb") as f:
       raw_gif = f.read()
-  with open("split/out0.part", "wb") as f:
+  with open("parts/out0.part", "wb") as f:
       f.write(full_gif_to_animated_gif_header(raw_gif))
 
   for i in xrange(1, 500):
       print i
-      with open("full/frame%d.gif" % i, "rb") as f:
+      with open("input/in%d.gif" % i, "rb") as f:
           raw_gif = f.read()
-      with open("split/out%d.part" % i, "wb") as f:
+      with open("parts/out%d.part" % i, "wb") as f:
           f.write(full_gif_to_frame(raw_gif))
