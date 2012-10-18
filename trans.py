@@ -1,13 +1,32 @@
 # -*- coding: utf-8 -*-
 
+# Reference
 # GIF Spec: http://tronche.com/computer-graphics/gif/gif89a.html#image-descriptor
-# Better explanation: http://www.matthewflickinger.com/lab/whatsinagif/bits_and_bytes.asp
+# GIF for Dummies: http://www.matthewflickinger.com/lab/whatsinagif/bits_and_bytes.asp
+# Animated GIF extension: http://odur.let.rug.nl/~kleiweg/gif/netscape.html
 
-def full_gif_to_frame(raw_gif):
-    # Header
+def hex_to_binary(hex_string):
+    return ''.join([b.decode('hex') for b in hex_string.split(" ")])
+
+def get_logical_screen_description(raw_gif):
     assert raw_gif.startswith("GIF89a")
     width = ord(raw_gif[6]) + 256 * ord(raw_gif[7])
     height = ord(raw_gif[8]) + 256 * ord(raw_gif[9])
+    return raw_gif[:13]
+
+def full_gif_to_animated_gif_header(raw_gif):
+    # Remove global color table
+    logical_description = [c for c in get_logical_screen_description(raw_gif)]
+    logical_description[10] = chr(0)
+    logical_description = ''.join(logical_description)
+
+    # Animated GIF extension
+    ANIMATED_GIF_EXTENSION = hex_to_binary("21 ff 0b") + "NETSCAPE2.0" + hex_to_binary("03 01 01 00 00")
+    return logical_description + ANIMATED_GIF_EXTENSION
+
+def full_gif_to_frame(raw_gif):
+     # Assert header is valid, we don't use any info
+    get_logical_screen_description(raw_gif)
 
     # Global color table
     assert hex(ord(raw_gif[10])) == "0xf7"
@@ -34,7 +53,7 @@ def full_gif_to_frame(raw_gif):
     assert raw_gif[data_range[1]] == ";" # file terminator
 
     # New frame data
-    frame = ''.join([b.decode('hex') for b in "21 f9 04 04 0d 00 1f 00".split(" ")])
+    frame = hex_to_binary("21 f9 04 04 0d 00 1f 00")
     frame += new_image_descriptor
     frame += color_table
     frame += data
@@ -43,6 +62,11 @@ def full_gif_to_frame(raw_gif):
 
 
 if __name__ == "__main__":
+  with open("full/frame1.gif", "rb") as f:
+      raw_gif = f.read()
+  with open("split/out0.part", "wb") as f:
+      f.write(full_gif_to_animated_gif_header(raw_gif))
+
   for i in xrange(1, 500):
       print i
       with open("full/frame%d.gif" % i, "rb") as f:
