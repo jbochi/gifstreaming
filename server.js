@@ -33,17 +33,16 @@ http.createServer(function (req, res) {
 }).listen(8080, '127.0.0.1');
 
 
-/*
-http://nodejs.org/api/fs.html#fs_fs_watch_filename_options_listener
-fs.watch('somedir', function (event, filename) {
-  console.log('event is: ' + event);
-  if (filename) {
-    console.log('filename provided: ' + filename);
-  } else {
-    console.log('filename not provided');
-  }
+var last_seen_file;
+fs.watch(INPUT_PATH, function (event, filename) {
+  fs.readdir(INPUT_PATH, function(err, files) {
+    for (var i = 0; i < files.length; i++) {
+      if (!last_seen_file || files[i] > last_seen_file) {
+        console.log("New file" + files[i]);
+        last_seen_file = files[i];
+      }
+    }
+  });
 });
-*/
-
 
 console.log('Server running at http://127.0.0.1:8080/');
