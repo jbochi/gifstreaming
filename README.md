@@ -6,7 +6,11 @@ You need to create one gif image per frame at the input directory
 If you have ffmpeg and a input video, you can do it like this:
 
     $ mkdir input
-    $ ffmpeg -i video.mp4 -pix_fmt rgb24 -s 159x97 -r 5 input/in%d.gif
+    $ ffmpeg -i video.mp4 -pix_fmt pal8 -s 159x97 -r 5 input/in%d.gif
+
+If you have a RTMP stream handy:
+
+    $ ffmpeg -re -i rtmp://server/app/stream -pix_fmt pal8 -s 159x97 -r 5 input/in%d.gif
 
 After that, create the gif frames that will be served executing the `trans.py` script
 

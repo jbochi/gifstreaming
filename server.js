@@ -19,7 +19,8 @@ http.createServer(function (req, res) {
   var serveAll = function(err) {
     if (err) {
       console.log(err);
-      //res.end();
+      res.write(";");
+      res.end();
     } else if (!done) {
       setTimeout(function() {      
         servePart(res, i, serveAll);
