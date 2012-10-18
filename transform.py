@@ -12,6 +12,8 @@ import time
 INPUT_PATH = "input"
 OUTPUT_PATH = "parts"
 
+BUFFER = 20 #seconds
+
 def hex_to_binary(hex_string):
     return ''.join([b.decode('hex') for b in hex_string.split(" ")])
 
@@ -87,7 +89,7 @@ def transform():
     for filename in os.listdir(INPUT_PATH):
         if filename == "in1.gif":
             continue
-        threshold = time.time() - 60
+        threshold = time.time() - BUFFER
         input_path = os.path.join(INPUT_PATH, filename)
         output_name = re.search("(\d+)", filename).groups()[0].zfill(15) + ".part"
         output_path = os.path.join(OUTPUT_PATH, output_name)
