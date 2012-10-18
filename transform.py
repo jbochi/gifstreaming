@@ -85,10 +85,19 @@ def transform():
     create_header_file(os.path.join(INPUT_PATH, "in1.gif"),
                        os.path.join(OUTPUT_PATH, "0.part"))
     for filename in os.listdir(INPUT_PATH):
+        if filename == "in1.gif":
+            continue
+        threshold = time.time() - 60
         input_path = os.path.join(INPUT_PATH, filename)
         output_name = re.search("(\d+)", filename).groups()[0].zfill(15) + ".part"
         output_path = os.path.join(OUTPUT_PATH, output_name)
-        if not os.path.exists(output_path):
+        mtime = os.stat(input_path).st_mtime
+        if mtime < threshold:
+            print('remove %s' % input_path)
+            os.unlink(input_path)
+            if os.path.exists(output_path):
+                os.unlink(output_path)
+        elif not os.path.exists(output_path):
             create_frame_file(input_path, output_path)
 
 
