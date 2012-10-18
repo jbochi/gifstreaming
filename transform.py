@@ -6,6 +6,7 @@
 # Animated GIF extension: http://odur.let.rug.nl/~kleiweg/gif/netscape.html
 
 import os
+import re
 import time
 
 INPUT_PATH = "input"
@@ -60,7 +61,7 @@ def full_gif_to_frame(raw_gif):
     assert raw_gif[data_range[1]] == ";" # file terminator
 
     # New frame data
-    frame = hex_to_binary("21 f9 04 04 0d 00 1f 00")
+    frame = hex_to_binary("21 f9 04 04 14 00 1f 00")
     frame += new_image_descriptor
     frame += color_table
     frame += data
@@ -82,10 +83,11 @@ def create_frame_file(input_path, output_path):
 
 def transform():
     create_header_file(os.path.join(INPUT_PATH, "in1.gif"),
-                       os.path.join(OUTPUT_PATH, "out0.part"))
+                       os.path.join(OUTPUT_PATH, "0.part"))
     for filename in os.listdir(INPUT_PATH):
         input_path = os.path.join(INPUT_PATH, filename)
-        output_path = os.path.join(OUTPUT_PATH, filename.replace("in", "out").replace(".gif", ".part"))
+        output_name = re.search("(\d+)", filename).groups()[0].zfill(15) + ".part"
+        output_path = os.path.join(OUTPUT_PATH, output_name)
         if not os.path.exists(output_path):
             create_frame_file(input_path, output_path)
 
@@ -94,4 +96,4 @@ if __name__ == "__main__":
     while True:
         print 'Finding new files...'
         transform()
-        time.sleep(1)
+        time.sleep(0.1)

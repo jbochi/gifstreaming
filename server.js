@@ -1,9 +1,9 @@
 var fs = require('fs'),
     http = require('http');
 
+var INPUT_PATH = "parts";
 
-function servePart(res, i, callback) {
-  var filename = 'parts/out' + i + '.part';
+function servePart(res, filename, callback) {
   fs.readFile(filename, function (err, data) {
     if (err) return callback(err);
     console.log('serving file ' + filename);
@@ -14,26 +14,22 @@ function servePart(res, i, callback) {
 
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'image/gif'});
-  var done = false;
-  var i = 0;
-  var serveAll = function(err) {
-    if (err) {
-      console.log(err);
-      res.write(";");
+  console.log('user exited!');
+  fs.readdir(INPUT_PATH, function(err, files) {
+    if (err) throw err;
+    var i = 0;
+    var exited = false;
+    var serveFiles = function (err) {
+      if (err) res.end();
+      else if (!exited && i < files.length) servePart(res, INPUT_PATH + "/" + files[i++], serveFiles);
+    };
+    serveFiles();
+    req.on('close', function() {
+      console.log('user exited!');
+      exited = true;
       res.end();
-    } else if (!done) {
-      setTimeout(function() {      
-        servePart(res, i, serveAll);
-        i += 1;
-      }, 110);
-    }
-  };
-  req.on('close', function() {
-    console.log('saiu!');
-    done = true;
-    res.end();
-  })
-  serveAll();
+    });
+  });
 }).listen(8080, '127.0.0.1');
 
 
