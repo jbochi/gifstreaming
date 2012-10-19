@@ -43,7 +43,7 @@ How it works
 ------------
 
 When a HTTP request is received, the node.js server delivers the Animated GIF Header, and frames
-for the first 10 seconds of video, but does not closes the connection. After that, it watches the
+for the first 10 seconds of video, but does not close the connection. After that, it watches the
 local directory for new frames and pushes then to all connected users. Since the GIF file format
 does not specify the number of frames and the Trailer is never delivered, the browser will keep
 the connection open (at least while it has enough memory :-).
