@@ -34,7 +34,6 @@ http.createServer(function (req, res) {
     };
     serveFiles();
     req.on('close', function() {
-      console.log('user exited!');
       exited = true;
       res.end();
       subscribers.remove(res);
