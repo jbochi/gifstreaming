@@ -13,6 +13,7 @@ INPUT_PATH = "input"
 OUTPUT_PATH = "parts"
 
 BUFFER = 20 #seconds
+FRAME_INTERVAL = 10 #0.10s
 
 def hex_to_binary(hex_string):
     return ''.join([b.decode('hex') for b in hex_string.split(" ")])
@@ -34,7 +35,7 @@ def full_gif_to_animated_gif_header(raw_gif):
     assert len(ANIMATED_GIF_EXTENSION) == 19
     return logical_description + ANIMATED_GIF_EXTENSION
 
-def full_gif_to_frame(raw_gif):
+def full_gif_to_frame(raw_gif, frame_interval=10):
      # Assert header is valid, we don't use any info
     get_logical_screen_description(raw_gif)
 
@@ -63,7 +64,7 @@ def full_gif_to_frame(raw_gif):
     assert raw_gif[data_range[1]] == ";" # file terminator
 
     # New frame data
-    frame = hex_to_binary("21 f9 04 04 14 00 1f 00")
+    frame = hex_to_binary("21 f9 04 04") + chr(frame_interval) + hex_to_binary("00 1f 00")
     frame += new_image_descriptor
     frame += color_table
     frame += data
@@ -76,7 +77,7 @@ def create_header_file(input_path, output_path):
     with open(output_path, "wb") as f:
         f.write(full_gif_to_animated_gif_header(raw_gif))
 
-def create_frame_file(input_path, output_path):
+def create_frame_file(input_path, output_path, frame_interval):
     print "converting %s to %s" % (input_path, output_path)
     with open(input_path, "rb") as f:
         raw_gif = f.read()
@@ -100,7 +101,7 @@ def transform():
             if os.path.exists(output_path):
                 os.unlink(output_path)
         elif not os.path.exists(output_path):
-            create_frame_file(input_path, output_path)
+            create_frame_file(input_path, output_path, frame_interval=FRAME_INTERVAL)
 
 
 if __name__ == "__main__":
