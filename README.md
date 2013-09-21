@@ -1,23 +1,16 @@
-Video streaming using Animated GIFs
------------------------------------
+Video streaming using M-JPEG
+----------------------------
 
-![Sample](https://raw.github.com/jbochi/gifstreaming/master/doc/sample.gif)
-
-You need to create one gif image per frame at the input directory
+Node.js will watch for jpeg frames on parts/ directory and stream them to all subscribers.
 
 If you have ffmpeg and a input video, you can do it like this:
 
     $ mkdir input
-    $ ffmpeg -i video.mp4 -pix_fmt pal8 -s 159x97 -r 10 input/in%d.gif
+    $ ffmpeg -re -i video.mp4 -r 1 parts/teste%9d.jpg
 
 If you have a RTMP stream handy:
 
-    $ ffmpeg -re -i rtmp://server/app/stream -pix_fmt pal8 -s 159x97 -r 10 input/in%d.gif
-
-After that, create the gif frames that will be served executing the `trans.py` script
-
-    $ mkdir parts
-    $ python transform.py
+    $ ffmpeg -re -i rtmp://server/app/stream -r 1 parts/teste%9d.jpg
 
 The server is a node.js script:
 
