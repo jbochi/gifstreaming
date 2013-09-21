@@ -25,23 +25,7 @@ function servePart(res, filename, callback) {
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'multipart/x-mixed-replace; boundary=endofsection'});
   subscribers.push(res);
-  console.log('New subscriber: ' + subscribers.length + " total.\n")
-  fs.readdir(INPUT_PATH, function(err, files) {
-    if (err) throw err;
-    var i = 0;
-    var exited = false;
-    var serveFiles = function (err) {
-      if (err) res.end();
-      else if (!exited && i < files.length) servePart(res, INPUT_PATH + "/" + files[i++], serveFiles);
-    };
-    serveFiles();
-    req.on('close', function() {
-      exited = true;
-      res.end();
-      subscribers.remove(res);
-      console.log('Subscriber left: ' + subscribers.length + " total.\n");
-    });
-  });
+  console.log('New subscriber: ' + subscribers.length + " total.\n");
 }).listen(8080, '0.0.0.0');
 
 
@@ -55,7 +39,8 @@ var last_seen_file;
 fs.watch(INPUT_PATH, function (event, filename) {
   fs.readdir(INPUT_PATH, function(err, files) {
     for (var i = 0; i < files.length; i++) {
-      if (!last_seen_file || files[i] > last_seen_file) {
+      if (/\.jpg$/.test(files[i]) &&
+          (!last_seen_file || files[i] > last_seen_file)) {
         //console.log("New file: " + files[i]);
         onNewFile(INPUT_PATH + "/" + files[i]);
         last_seen_file = files[i];
