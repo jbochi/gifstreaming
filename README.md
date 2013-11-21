@@ -8,6 +8,15 @@ Preview
 
 This sample video is just a fragment of a live video served by gifstreaming.
 
+Warning
+-------
+
+This is a toy project and it's not production ready. If you are seriously about 
+live video streaming using images, take a look at [live_thumb](https://github.com/jbochi/live_thumb).
+It uses much less bandwidth because the images are encoded as JPEG and it is more
+stable, since it uses nginx-push-stream to serve the images instead of this poorly
+tested node.js app.
+
 Browser Support
 ---------------
 
