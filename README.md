@@ -61,7 +61,7 @@ The Python server creates the animated GIF header (Header, Logical Screen Descri
 based on the first frame. For all the subsequent frames, it removes the Header, and transform the Global
 Color Table into a Local Color Table.
 
-![GIF file](http://www.matthewflickinger.com/lab/whatsinagif/gif_file_stream.gif)
+![GIF file](http://www.matthewflickinger.com/lab/whatsinagif/images/gif_file_stream.gif)
 
 A good explanation of the GIF spec can be found here: http://www.matthewflickinger.com/lab/whatsinagif/bits_and_bytes.asp
 
